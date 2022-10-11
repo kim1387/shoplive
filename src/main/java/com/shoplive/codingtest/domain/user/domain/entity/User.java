@@ -1,12 +1,11 @@
 package com.shoplive.codingtest.domain.user.domain.entity;
 
 import com.shoplive.codingtest.global.entity.BaseTimeEntity;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Getter
 @Entity

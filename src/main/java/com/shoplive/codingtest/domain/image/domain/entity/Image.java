@@ -1,12 +1,11 @@
 package com.shoplive.codingtest.domain.image.domain.entity;
 
 import com.shoplive.codingtest.global.entity.BaseCreatedEntity;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Getter
 @Entity
@@ -22,7 +21,7 @@ public class Image extends BaseCreatedEntity {
   @Column(name = "name", nullable = false)
   private String name;
 
-  //이미지 파일 형식 유형
+  // 이미지 파일 형식 유형
   @Column(name = "type", nullable = false)
   private String type;
 
