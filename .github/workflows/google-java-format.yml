@@ -17,4 +17,4 @@ jobs:
       - uses: axel-op/googlejavaformat-action@v3
         with:
           args: "--replace"
-          commitMessage: "Format : Naver Java Format"
+          commitMessage: "Format : Google Java Format"
