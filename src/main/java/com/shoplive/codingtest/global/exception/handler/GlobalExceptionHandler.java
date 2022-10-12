@@ -1,8 +1,8 @@
 package com.shoplive.codingtest.global.exception.handler;
 
 import com.shoplive.codingtest.global.dto.ErrorResponse;
-import com.shoplive.codingtest.global.exception.BusinessException;
 import com.shoplive.codingtest.global.dto.code.ErrorCode;
+import com.shoplive.codingtest.global.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
