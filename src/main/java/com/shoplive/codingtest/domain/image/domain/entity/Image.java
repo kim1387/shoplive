@@ -2,12 +2,11 @@ package com.shoplive.codingtest.domain.image.domain.entity;
 
 import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.global.entity.BaseCreatedEntity;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Getter
 @Entity
