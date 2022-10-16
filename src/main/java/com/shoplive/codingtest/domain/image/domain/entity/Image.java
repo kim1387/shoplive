@@ -2,10 +2,9 @@ package com.shoplive.codingtest.domain.image.domain.entity;
 
 import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.global.entity.BaseCreatedEntity;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.Objects;
+import javax.persistence.*;
+import lombok.*;
 
 @Getter
 @Entity
@@ -13,8 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Image extends BaseCreatedEntity {
 
-  @Id
-  private String id;
+  @Id private String id;
 
   // 이미지명
   @Column(name = "name", nullable = false)
@@ -50,7 +48,11 @@ public class Image extends BaseCreatedEntity {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Image image = (Image) o;
-    return isRemoved == image.isRemoved && Objects.equals(id, image.id) && Objects.equals(name, image.name) && Objects.equals(cloudPath, image.cloudPath) && Objects.equals(board, image.board);
+    return isRemoved == image.isRemoved
+        && Objects.equals(id, image.id)
+        && Objects.equals(name, image.name)
+        && Objects.equals(cloudPath, image.cloudPath)
+        && Objects.equals(board, image.board);
   }
 
   @Override

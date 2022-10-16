@@ -2,20 +2,19 @@ package com.shoplive.codingtest.domain.board.service;
 
 import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.domain.board.domain.repository.BoardRepository;
-import com.shoplive.codingtest.domain.board.dto.BoardUploadRequest;
 import com.shoplive.codingtest.domain.board.dto.BoardDetailResponse;
+import com.shoplive.codingtest.domain.board.dto.BoardUploadRequest;
 import com.shoplive.codingtest.domain.board.exception.BoardNotFoundException;
 import com.shoplive.codingtest.domain.image.domain.entity.Image;
 import com.shoplive.codingtest.domain.image.service.ImageService;
 import com.shoplive.codingtest.domain.user.domain.entity.User;
 import com.shoplive.codingtest.domain.user.domain.repository.UserRepository;
 import com.shoplive.codingtest.domain.user.exception.UserNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -67,7 +66,8 @@ public class BoardService {
 
   // TODO N+1 이슈 발생 하지만 이미지가 2개까지 가능해 큰 문제는 아님
   public BoardDetailResponse getBoardDetail(Long boardId) {
-    Board board = boardRepository.findByIdAndRemoved(boardId).orElseThrow(BoardNotFoundException::new);
+    Board board =
+        boardRepository.findByIdAndRemoved(boardId).orElseThrow(BoardNotFoundException::new);
     return BoardDetailResponse.builder()
         .title(board.getTitle())
         .content(board.getContent())

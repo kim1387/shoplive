@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class BoardNotFoundException extends BusinessException {
 
-    public BoardNotFoundException() {
-        super(ErrorCode.BOARD_NOT_FOUND);
-    }
+  public BoardNotFoundException() {
+    super(ErrorCode.BOARD_NOT_FOUND);
+  }
 }

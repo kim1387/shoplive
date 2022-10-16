@@ -1,9 +1,8 @@
 package com.shoplive.codingtest.domain.user.domain.entity;
 
 import com.shoplive.codingtest.global.entity.BaseTimeEntity;
-import lombok.*;
-
 import javax.persistence.*;
+import lombok.*;
 
 @Getter
 @Entity

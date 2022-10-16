@@ -3,12 +3,11 @@ package com.shoplive.codingtest.domain.board.domain.entity;
 import com.shoplive.codingtest.domain.image.domain.entity.Image;
 import com.shoplive.codingtest.domain.user.domain.entity.User;
 import com.shoplive.codingtest.global.entity.BaseTimeEntity;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.*;
+import lombok.*;
 
 @Getter
 @Entity
