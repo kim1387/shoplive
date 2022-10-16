@@ -39,4 +39,8 @@ public class Image extends BaseCreatedEntity {
     this.board = board;
     this.isRemoved = false;
   }
+
+  public void setBoard(Board board) {
+    this.board = board;
+  }
 }

@@ -3,13 +3,11 @@ package com.shoplive.codingtest.domain.board.domain.entity;
 import com.shoplive.codingtest.domain.image.domain.entity.Image;
 import com.shoplive.codingtest.domain.user.domain.entity.User;
 import com.shoplive.codingtest.global.entity.BaseTimeEntity;
+import lombok.*;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
@@ -43,4 +41,12 @@ public class Board extends BaseTimeEntity {
   // 게시물과 이미지 연관관계
   @OneToMany(mappedBy = "board")
   private List<Image> boardImages = new ArrayList<>();
+
+  @Builder
+  public Board(String title, String content, User user) {
+    this.title = title;
+    this.content = content;
+    this.user = user;
+    this.isRemoved = false;
+  }
 }

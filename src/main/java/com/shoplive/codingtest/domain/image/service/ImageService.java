@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.shoplive.codingtest.domain.image.domain.entity.Image;
+import com.shoplive.codingtest.domain.image.domain.repository.ImageRepository;
 import com.shoplive.codingtest.domain.image.exception.FailLocalFileDeleted;
 import com.shoplive.codingtest.domain.image.exception.FailedUploadImageToLocalException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,8 +28,14 @@ public class ImageService {
 
   private AmazonS3Client amazonS3Client;
 
+  private ImageRepository imageRepository;
+
   @Value("${cloud.aws.s3.bucket}")
   public String bucket;
+
+  public List<Image> saveAllImage(List<Image> imageList){
+    return imageRepository.saveAll(imageList);
+  }
 
   /**
    * 이미지를 업로드 할 때 꼭 로컬에 한번 저장해야할까? 대부분의 예제들이 local에 한번 저장한 후 cloud storage에 올리는데 이유는 나와 있지 않았습니다.
@@ -39,7 +47,8 @@ public class ImageService {
    * @param multipartFile request로 받은 이미지
    * @return image entity 반환 boardId는 별도 추가 필요
    */
-  public Image upload(MultipartFile multipartFile) throws IOException {
+  public Image uploadToS3(MultipartFile multipartFile){
+
     // 1. 로컬에 업로드 한다.
     File localFile = localUpload(multipartFile).orElseThrow(FailedUploadImageToLocalException::new);
     String newUUID = UUID.randomUUID().toString();
@@ -63,14 +72,18 @@ public class ImageService {
     return amazonS3Client.getUrl(bucket, fileName).toString();
   }
 
-  public Optional<File> localUpload(MultipartFile file) throws IOException {
+  public Optional<File> localUpload(MultipartFile file) {
     File newLocalFile =
         new File(File.pathSeparator + "image" + File.pathSeparator + file.getOriginalFilename());
-    if (newLocalFile.createNewFile()) {
-      try (FileOutputStream fos = new FileOutputStream(newLocalFile)) {
-        fos.write(file.getBytes());
+    try {
+      if (newLocalFile.createNewFile()) {
+        try (FileOutputStream fos = new FileOutputStream(newLocalFile)) {
+          fos.write(file.getBytes());
+        }
+        return Optional.of(newLocalFile);
       }
-      return Optional.of(newLocalFile);
+    } catch (IOException e) {
+      throw new FailedUploadImageToLocalException();
     }
     log.warn("local upload fail");
     return Optional.empty();
