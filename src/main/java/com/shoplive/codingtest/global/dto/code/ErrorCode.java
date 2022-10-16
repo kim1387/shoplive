@@ -11,8 +11,9 @@ public enum ErrorCode {
 
   // USER
   USER_NOT_FOUND(400, "U001", "유저를 찾을 수없습니다."),
+  IMAGE_NOT_UPLOAD_LOCAL(400, "I001","로컬에 이미지 업로드 실패"),
+  IMAGE_NOT_DELETE_LOCAL(400, "I002","로컬에 이미지 삭제 실패")
   ;
-
   private final int status;
   private final String code;
   private final String message;

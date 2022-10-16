@@ -2,10 +2,7 @@ package com.shoplive.codingtest.domain.image.domain.entity;
 
 import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.global.entity.BaseCreatedEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,16 +13,11 @@ import javax.persistence.*;
 public class Image extends BaseCreatedEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private String id;
 
   // 이미지명
   @Column(name = "name", nullable = false)
   private String name;
-
-  // 이미지 파일 형식 유형
-  @Column(name = "type", nullable = false)
-  private String type;
 
   // 클라우드에 저장된 URL
   @Column(name = "cloud_path", nullable = false)
@@ -38,4 +30,13 @@ public class Image extends BaseCreatedEntity {
   // 이미지의 삭제 여부
   @Column(name = "is_removed", nullable = false)
   private boolean isRemoved;
+
+  @Builder
+  public Image(String id, String name, String cloudPath, Board board) {
+    this.id = id;
+    this.name = name;
+    this.cloudPath = cloudPath;
+    this.board = board;
+    this.isRemoved = false;
+  }
 }
