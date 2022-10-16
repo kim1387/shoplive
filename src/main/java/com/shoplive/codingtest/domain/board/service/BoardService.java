@@ -3,7 +3,8 @@ package com.shoplive.codingtest.domain.board.service;
 import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.domain.board.domain.repository.BoardRepository;
 import com.shoplive.codingtest.domain.board.dto.BoardUploadRequest;
-import com.shoplive.codingtest.domain.board.dto.BoardUploadResponse;
+import com.shoplive.codingtest.domain.board.dto.BoardDetailResponse;
+import com.shoplive.codingtest.domain.board.exception.BoardNotFoundException;
 import com.shoplive.codingtest.domain.image.domain.entity.Image;
 import com.shoplive.codingtest.domain.image.service.ImageService;
 import com.shoplive.codingtest.domain.user.domain.entity.User;
@@ -27,7 +28,7 @@ public class BoardService {
   private final ImageService imageService;
 
   @Transactional
-  public BoardUploadResponse upload(BoardUploadRequest boardUploadRequest) {
+  public BoardDetailResponse upload(BoardUploadRequest boardUploadRequest) {
 
     final User loggedInUser = loadUserInfoWithUserId(boardUploadRequest);
     final Board newBoard =
@@ -54,7 +55,7 @@ public class BoardService {
             .map(Image::getCloudPath)
             .collect(Collectors.toList());
 
-    return BoardUploadResponse.builder()
+    return BoardDetailResponse.builder()
         .userName(loggedInUser.getName())
         .createdDate(newBoard.getCreatedDate())
         .updatedDate(newBoard.getUpdatedDate())
@@ -64,6 +65,18 @@ public class BoardService {
         .build();
   }
 
+  // TODO N+1 이슈 발생 하지만 이미지가 2개까지 가능해 큰 문제는 아님
+  public BoardDetailResponse getBoardDetail(Long boardId) {
+    Board board = boardRepository.findByIdAndRemoved(boardId).orElseThrow(BoardNotFoundException::new);
+    return BoardDetailResponse.builder()
+        .title(board.getTitle())
+        .content(board.getContent())
+        .boardImages(
+            board.getBoardImages().stream().map(Image::getCloudPath).collect(Collectors.toList()))
+        .createdDate(board.getCreatedDate())
+        .updatedDate(board.getUpdatedDate())
+        .build();
+  }
 
   private User loadUserInfoWithUserId(BoardUploadRequest boardUploadRequest) {
     final Long loggedInUserId = boardUploadRequest.getUserId();
