@@ -8,6 +8,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -48,5 +49,27 @@ public class Board extends BaseTimeEntity {
     this.content = content;
     this.user = user;
     this.isRemoved = false;
+  }
+
+  public void deleteBoard() {
+    this.isRemoved = true;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Board board = (Board) o;
+    return isRemoved == board.isRemoved
+        && Objects.equals(id, board.id)
+        && Objects.equals(title, board.title)
+        && Objects.equals(content, board.content)
+        && Objects.equals(user, board.user)
+        && Objects.equals(boardImages, board.boardImages);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, title, content, isRemoved, user, boardImages);
   }
 }

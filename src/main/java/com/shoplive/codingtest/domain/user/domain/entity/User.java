@@ -1,11 +1,9 @@
 package com.shoplive.codingtest.domain.user.domain.entity;
 
 import com.shoplive.codingtest.global.entity.BaseTimeEntity;
+import lombok.*;
+
 import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
@@ -30,4 +28,11 @@ public class User extends BaseTimeEntity {
   // 활성 유저 여부 체크
   @Column(name = "is_activated", nullable = false)
   private boolean isActivated;
+
+  @Builder
+  public User(String name, UserRole userRole, boolean isActivated) {
+    this.name = name;
+    this.userRole = userRole;
+    this.isActivated = isActivated;
+  }
 }
