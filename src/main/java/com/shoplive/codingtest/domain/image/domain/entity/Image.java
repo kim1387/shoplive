@@ -5,6 +5,7 @@ import com.shoplive.codingtest.global.entity.BaseCreatedEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -42,5 +43,18 @@ public class Image extends BaseCreatedEntity {
 
   public void setBoard(Board board) {
     this.board = board;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Image image = (Image) o;
+    return isRemoved == image.isRemoved && Objects.equals(id, image.id) && Objects.equals(name, image.name) && Objects.equals(cloudPath, image.cloudPath) && Objects.equals(board, image.board);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, cloudPath, board, isRemoved);
   }
 }
