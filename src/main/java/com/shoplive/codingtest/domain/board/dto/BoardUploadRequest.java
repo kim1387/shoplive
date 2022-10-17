@@ -1,10 +1,11 @@
 package com.shoplive.codingtest.domain.board.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.validation.constraints.Size;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class BoardUploadRequest {
@@ -17,7 +18,7 @@ public class BoardUploadRequest {
   private Long userId;
 
   // 게시판 내용
-  @Size(max = 2000, message = "게시물 내용은 2000자까지 가능")
+  @Size(min = 1, max = 2000, message = "게시물 내용은 2000자까지 가능")
   private String content;
 
   // 게시물에 함께 등록된 이미지들

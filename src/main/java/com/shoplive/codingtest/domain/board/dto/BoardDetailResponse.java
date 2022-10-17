@@ -1,14 +1,13 @@
 package com.shoplive.codingtest.domain.board.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
+@Setter
 @Builder
 @Getter
 @AllArgsConstructor
@@ -41,4 +40,5 @@ public class BoardDetailResponse {
     this.createdDate = createdDate;
     this.updatedDate = updatedDate;
   }
+
 }
