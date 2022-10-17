@@ -6,7 +6,14 @@ import com.shoplive.codingtest.domain.board.dto.BoardUpdateRequest;
 import com.shoplive.codingtest.domain.board.dto.BoardUploadRequest;
 import com.shoplive.codingtest.domain.board.service.BoardService;
 import com.shoplive.codingtest.global.dto.ResultResponse;
+import com.shoplive.codingtest.global.dto.code.ErrorCode;
 import com.shoplive.codingtest.global.dto.code.ResultCode;
+import com.shoplive.codingtest.global.exception.ThrottlingLimitException;
+import com.shoplive.codingtest.global.utill.CookieUtil;
+import java.util.Optional;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +28,16 @@ public class BoardController {
 
   @PostMapping("/upload")
   public ResponseEntity<ResultResponse> uploadImage(
-      @Valid @ModelAttribute BoardUploadRequest request) {
+      @Valid @ModelAttribute BoardUploadRequest request,
+      HttpServletRequest httpServletRequest,
+      HttpServletResponse httpServletResponse) {
+    /* 조회수 로직 */
+    Optional<Cookie> throttlingChecker =
+        CookieUtil.getCookie(httpServletRequest, "throttlingChecker");
+    if (throttlingChecker.isPresent()) {
+      throw new ThrottlingLimitException(ErrorCode.TOO_MANY_CREATE_BOARD);
+    }
+    CookieUtil.addCookie(httpServletResponse, "throttlingChecker", "");
 
     BoardDetailResponse boardDetailResponse = boardService.upload(request);
     return ResponseEntity.ok(

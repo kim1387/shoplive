@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
   // Global
   INTERNAL_SERVER_ERROR(500, "G001", "서버 오류"),
+  TOO_MANY_CREATE_BOARD(429, "G002", "조금 있다가 게시물을 생성해주세요"),
 
   // USER
   USER_NOT_FOUND(400, "U001", "유저를 찾을 수 없습니다."),
