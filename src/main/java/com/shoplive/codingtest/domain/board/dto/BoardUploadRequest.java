@@ -1,11 +1,10 @@
 package com.shoplive.codingtest.domain.board.dto;
 
-import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.Size;
+import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class BoardUploadRequest {

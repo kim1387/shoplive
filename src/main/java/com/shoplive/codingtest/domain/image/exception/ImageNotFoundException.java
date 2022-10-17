@@ -5,7 +5,7 @@ import com.shoplive.codingtest.global.exception.BusinessException;
 
 public class ImageNotFoundException extends BusinessException {
 
-    public ImageNotFoundException() {
-        super(ErrorCode.IMAGE_NOT_FOUND);
-    }
+  public ImageNotFoundException() {
+    super(ErrorCode.IMAGE_NOT_FOUND);
+  }
 }

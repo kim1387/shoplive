@@ -12,14 +12,13 @@ import com.shoplive.codingtest.domain.image.service.ImageService;
 import com.shoplive.codingtest.domain.user.domain.entity.User;
 import com.shoplive.codingtest.domain.user.domain.repository.UserRepository;
 import com.shoplive.codingtest.domain.user.exception.UserNotFoundException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
