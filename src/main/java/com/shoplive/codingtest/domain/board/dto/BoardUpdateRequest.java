@@ -7,13 +7,14 @@ import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-public class BoardUploadRequest {
+public class BoardUpdateRequest {
 
+  private Long boardId;
   // 게시판 제목
   @Size(max = 50, message = "게시물 제목은 50자까지 가능")
   private String title;
 
-  // 게시글 작성자
+  // 게시글 수정자
   private Long userId;
 
   // 게시판 내용

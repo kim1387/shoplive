@@ -7,6 +7,7 @@ import com.shoplive.codingtest.domain.image.domain.entity.Image;
 import com.shoplive.codingtest.domain.image.domain.repository.ImageRepository;
 import com.shoplive.codingtest.domain.image.exception.FailLocalFileDeleted;
 import com.shoplive.codingtest.domain.image.exception.FailedUploadImageToLocalException;
+import com.shoplive.codingtest.domain.image.exception.ImageNotFoundException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -95,5 +96,9 @@ public class ImageService {
     } catch (IOException e) {
       throw new FailLocalFileDeleted();
     }
+  }
+
+  public List<Image> findImageByBoardId(Long boardId) {
+    return imageRepository.findAllByBoardId(boardId).orElseThrow(ImageNotFoundException::new);
   }
 }
