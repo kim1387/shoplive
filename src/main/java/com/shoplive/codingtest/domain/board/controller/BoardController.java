@@ -7,11 +7,10 @@ import com.shoplive.codingtest.domain.board.dto.BoardUploadRequest;
 import com.shoplive.codingtest.domain.board.service.BoardService;
 import com.shoplive.codingtest.global.dto.ResultResponse;
 import com.shoplive.codingtest.global.dto.code.ResultCode;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RequestMapping("/api/v1/board")
 @RequiredArgsConstructor
@@ -54,7 +53,8 @@ public class BoardController {
     BoardListResponse response =
         boardService.searchBoardWithTitleOrContent(page, size, isTimeReversed, search);
 
-    return ResponseEntity.ok(ResultResponse.of(ResultCode.BOARD_LIST_PAGE_SEARCH_SUCCESS, response));
+    return ResponseEntity.ok(
+        ResultResponse.of(ResultCode.BOARD_LIST_PAGE_SEARCH_SUCCESS, response));
   }
 
   @PutMapping

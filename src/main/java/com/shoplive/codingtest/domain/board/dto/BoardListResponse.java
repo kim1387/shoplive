@@ -1,9 +1,8 @@
 package com.shoplive.codingtest.domain.board.dto;
 
-import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
 
 @Builder
 @Getter

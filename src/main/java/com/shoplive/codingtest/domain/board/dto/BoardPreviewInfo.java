@@ -1,9 +1,8 @@
 package com.shoplive.codingtest.domain.board.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Setter
 @Getter
