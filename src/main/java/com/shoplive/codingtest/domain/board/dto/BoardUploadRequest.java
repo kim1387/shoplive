@@ -1,12 +1,11 @@
 package com.shoplive.codingtest.domain.board.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 @Setter
 @Getter

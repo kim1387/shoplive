@@ -2,10 +2,9 @@ package com.shoplive.codingtest.domain.image.domain.entity;
 
 import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.global.entity.BaseCreatedEntity;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.Objects;
+import javax.persistence.*;
+import lombok.*;
 
 @Getter
 @Entity

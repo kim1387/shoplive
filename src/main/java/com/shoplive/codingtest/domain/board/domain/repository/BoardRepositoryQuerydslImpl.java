@@ -1,19 +1,18 @@
 package com.shoplive.codingtest.domain.board.domain.repository;
 
+import static com.shoplive.codingtest.domain.board.domain.entity.QBoard.board;
+import static com.shoplive.codingtest.domain.image.domain.entity.QImage.image;
+import static com.shoplive.codingtest.domain.user.domain.entity.QUser.user;
+
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shoplive.codingtest.domain.board.dto.BoardPreviewInfo;
 import com.shoplive.codingtest.domain.board.dto.QBoardPreviewInfo;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-
-import static com.shoplive.codingtest.domain.board.domain.entity.QBoard.board;
-import static com.shoplive.codingtest.domain.image.domain.entity.QImage.image;
-import static com.shoplive.codingtest.domain.user.domain.entity.QUser.user;
 
 @RequiredArgsConstructor
 public class BoardRepositoryQuerydslImpl implements BoardRepositoryQuerydsl {
