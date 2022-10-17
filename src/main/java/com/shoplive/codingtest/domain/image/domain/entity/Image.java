@@ -2,9 +2,10 @@ package com.shoplive.codingtest.domain.image.domain.entity;
 
 import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.global.entity.BaseCreatedEntity;
-import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -19,7 +20,7 @@ public class Image extends BaseCreatedEntity {
   private String name;
 
   // 클라우드에 저장된 URL
-  @Column(name = "cloud_path", nullable = false)
+  @Column(name = "cloud_path")
   private String cloudPath;
 
   @ManyToOne(fetch = FetchType.LAZY)

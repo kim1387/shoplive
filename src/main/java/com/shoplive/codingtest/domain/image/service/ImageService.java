@@ -8,6 +8,12 @@ import com.shoplive.codingtest.domain.image.domain.repository.ImageRepository;
 import com.shoplive.codingtest.domain.image.exception.FailLocalFileDeleted;
 import com.shoplive.codingtest.domain.image.exception.FailedUploadImageToLocalException;
 import com.shoplive.codingtest.domain.image.exception.ImageNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,20 +21,15 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ImageService {
 
-  private AmazonS3Client amazonS3Client;
+  private final AmazonS3Client amazonS3Client;
 
-  private ImageRepository imageRepository;
+  private final ImageRepository imageRepository;
 
   @Value("${cloud.aws.s3.bucket}")
   public String bucket;
@@ -48,11 +49,12 @@ public class ImageService {
    * @return image entity 반환 boardId는 별도 추가 필요
    */
   public Image uploadToS3(MultipartFile multipartFile) {
+    String newUUID = UUID.randomUUID().toString();
 
     // 1. 로컬에 업로드 한다.
-    File localFile = localUpload(multipartFile).orElseThrow(FailedUploadImageToLocalException::new);
-    String newUUID = UUID.randomUUID().toString();
-    String newImageName = newUUID + "-" + multipartFile.getOriginalFilename();
+    File localFile =
+        localUpload(multipartFile, newUUID).orElseThrow(FailedUploadImageToLocalException::new);
+    String newImageName = newUUID + "_" + multipartFile.getOriginalFilename();
     // 2. s3에 이미지를 업로드한다.
     String cloudPath = uploadToS3(newImageName, localFile);
     // 3. local에 이미지를 지운다.
@@ -66,15 +68,26 @@ public class ImageService {
    * @return cloudPath - image url 반환
    */
   private String uploadToS3(String fileName, File localFile) {
+    log.info("2234344334343" + localFile.getPath());
+
     amazonS3Client.putObject(
         new PutObjectRequest(bucket, fileName, localFile)
             .withCannedAcl(CannedAccessControlList.PublicRead));
     return amazonS3Client.getUrl(bucket, fileName).toString();
   }
 
-  public Optional<File> localUpload(MultipartFile file) {
+  public Optional<File> localUpload(MultipartFile file, String newUUID) {
+    log.info(file.getOriginalFilename() + "-------------");
     File newLocalFile =
-        new File(File.pathSeparator + "image" + File.pathSeparator + file.getOriginalFilename());
+        new File(
+            System.getProperty("user.dir")
+                + "\\image\\"
+                + newUUID
+                + "_"
+                + file.getOriginalFilename());
+    log.info(newLocalFile.getName() + "-------------");
+    log.info(newLocalFile.getPath() + "-------------");
+
     try {
       if (newLocalFile.createNewFile()) {
         try (FileOutputStream fos = new FileOutputStream(newLocalFile)) {
@@ -83,9 +96,9 @@ public class ImageService {
         return Optional.of(newLocalFile);
       }
     } catch (IOException e) {
+      log.warn("local upload fail");
       throw new FailedUploadImageToLocalException();
     }
-    log.warn("local upload fail");
     return Optional.empty();
   }
 

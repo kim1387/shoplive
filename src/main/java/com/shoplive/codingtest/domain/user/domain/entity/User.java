@@ -1,8 +1,9 @@
 package com.shoplive.codingtest.domain.user.domain.entity;
 
 import com.shoplive.codingtest.global.entity.BaseTimeEntity;
-import javax.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -29,9 +30,9 @@ public class User extends BaseTimeEntity {
   private boolean isActivated;
 
   @Builder
-  public User(String name, UserRole userRole, boolean isActivated) {
+  public User(String name, UserRole userRole) {
     this.name = name;
     this.userRole = userRole;
-    this.isActivated = isActivated;
+    this.isActivated = true;
   }
 }

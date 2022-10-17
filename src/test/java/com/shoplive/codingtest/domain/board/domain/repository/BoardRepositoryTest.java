@@ -1,8 +1,5 @@
 package com.shoplive.codingtest.domain.board.domain.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.domain.board.exception.BoardNotFoundException;
 import com.shoplive.codingtest.domain.image.domain.entity.Image;
@@ -10,13 +7,17 @@ import com.shoplive.codingtest.domain.image.domain.repository.ImageRepository;
 import com.shoplive.codingtest.domain.user.domain.entity.User;
 import com.shoplive.codingtest.domain.user.domain.entity.UserRole;
 import com.shoplive.codingtest.domain.user.domain.repository.UserRepository;
-import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 class BoardRepositoryTest {
@@ -34,7 +35,7 @@ class BoardRepositoryTest {
   void setUp() {
 
     String givenUUID = UUID.randomUUID().toString();
-    givenUser = User.builder().userRole(UserRole.USER).isActivated(true).name("김기현").build();
+    givenUser = User.builder().userRole(UserRole.USER).name("김기현").build();
 
     givenBoard = Board.builder().title("제목").content("내용").user(givenUser).build();
 
