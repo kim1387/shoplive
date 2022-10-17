@@ -10,15 +10,14 @@ import com.shoplive.codingtest.global.dto.code.ErrorCode;
 import com.shoplive.codingtest.global.dto.code.ResultCode;
 import com.shoplive.codingtest.global.exception.ThrottlingLimitException;
 import com.shoplive.codingtest.global.utill.CookieUtil;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/board")
 @RequiredArgsConstructor
@@ -33,12 +32,12 @@ public class BoardController {
       HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse) {
     /* 조회수 로직 */
-    Optional<Cookie> throttlingChecker = CookieUtil.getCookie(httpServletRequest, "throttlingChecker");
+    Optional<Cookie> throttlingChecker =
+        CookieUtil.getCookie(httpServletRequest, "throttlingChecker");
     if (throttlingChecker.isPresent()) {
       throw new ThrottlingLimitException(ErrorCode.TOO_MANY_CREATE_BOARD);
     }
-    CookieUtil.addCookie(httpServletResponse, "throttlingChecker","");
-
+    CookieUtil.addCookie(httpServletResponse, "throttlingChecker", "");
 
     BoardDetailResponse boardDetailResponse = boardService.upload(request);
     return ResponseEntity.ok(
