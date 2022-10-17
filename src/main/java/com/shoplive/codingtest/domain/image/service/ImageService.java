@@ -7,6 +7,13 @@ import com.shoplive.codingtest.domain.image.domain.entity.Image;
 import com.shoplive.codingtest.domain.image.domain.repository.ImageRepository;
 import com.shoplive.codingtest.domain.image.exception.FailLocalFileDeleted;
 import com.shoplive.codingtest.domain.image.exception.FailedUploadImageToLocalException;
+import com.shoplive.codingtest.domain.image.exception.ImageNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,11 +21,6 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -95,5 +97,9 @@ public class ImageService {
     } catch (IOException e) {
       throw new FailLocalFileDeleted();
     }
+  }
+
+  public List<Image> findImageByBoardId(Long boardId){
+    return imageRepository.findAllByBoardId(boardId).orElseThrow(ImageNotFoundException::new);
   }
 }
