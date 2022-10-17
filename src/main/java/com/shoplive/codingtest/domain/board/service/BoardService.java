@@ -4,6 +4,7 @@ import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.domain.board.domain.repository.BoardRepository;
 import com.shoplive.codingtest.domain.board.dto.*;
 import com.shoplive.codingtest.domain.board.exception.BoardNotFoundException;
+import com.shoplive.codingtest.domain.board.exception.CantDeleteAlreadyBoard;
 import com.shoplive.codingtest.domain.board.exception.CantUpdateOthersBoard;
 import com.shoplive.codingtest.domain.image.domain.entity.Image;
 import com.shoplive.codingtest.domain.image.service.ImageService;
@@ -128,6 +129,10 @@ public class BoardService {
 
   public void deleteBoard(Long boardId, Long userId) {
     Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+    if (board.isRemoved()) {
+      throw new CantDeleteAlreadyBoard();
+    }
+
     if (!Objects.equals(userId, board.getUser().getId())) {
       throw new CantUpdateOthersBoard();
     }

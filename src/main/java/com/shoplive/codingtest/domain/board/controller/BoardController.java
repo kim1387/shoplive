@@ -21,7 +21,8 @@ public class BoardController {
   private final BoardService boardService;
 
   @PostMapping("/upload")
-  public ResponseEntity<ResultResponse> uploadImage(@Valid @ModelAttribute BoardUploadRequest request) {
+  public ResponseEntity<ResultResponse> uploadImage(
+      @Valid @ModelAttribute BoardUploadRequest request) {
 
     BoardDetailResponse boardDetailResponse = boardService.upload(request);
     return ResponseEntity.ok(
