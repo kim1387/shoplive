@@ -32,9 +32,11 @@ public class BoardRepositoryQuerydslImpl implements BoardRepositoryQuerydsl {
         .from(board)
         .where(board.isRemoved.eq(false))
         .innerJoin(board.user, user)
+        .innerJoin(board.boardImages, image)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .orderBy(boardSort(isTimeReversed))
+        .distinct()
         .fetch();
   }
 

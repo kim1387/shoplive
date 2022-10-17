@@ -19,7 +19,7 @@ public class Image extends BaseCreatedEntity {
   private String name;
 
   // 클라우드에 저장된 URL
-  @Column(name = "cloud_path", nullable = false)
+  @Column(name = "cloud_path")
   private String cloudPath;
 
   @ManyToOne(fetch = FetchType.LAZY)

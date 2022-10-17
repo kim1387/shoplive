@@ -20,7 +20,8 @@ public class BoardController {
   private final BoardService boardService;
 
   @PostMapping("/upload")
-  public ResponseEntity<ResultResponse> uploadImage(@Valid BoardUploadRequest request) {
+  public ResponseEntity<ResultResponse> uploadImage(
+      @Valid @ModelAttribute BoardUploadRequest request) {
 
     BoardDetailResponse boardDetailResponse = boardService.upload(request);
     return ResponseEntity.ok(
@@ -37,7 +38,7 @@ public class BoardController {
   @GetMapping("/list/{page}")
   public ResponseEntity<ResultResponse> getBoardListPage(
       @PathVariable int page,
-      @RequestParam(required = false) int size,
+      @RequestParam(required = false, defaultValue = "10") int size,
       @RequestParam(defaultValue = "false", required = false) boolean isTimeReversed) {
     BoardListResponse response = boardService.getBoardListPage(page, size, isTimeReversed);
 

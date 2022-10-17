@@ -29,9 +29,9 @@ public class User extends BaseTimeEntity {
   private boolean isActivated;
 
   @Builder
-  public User(String name, UserRole userRole, boolean isActivated) {
+  public User(String name, UserRole userRole) {
     this.name = name;
     this.userRole = userRole;
-    this.isActivated = isActivated;
+    this.isActivated = true;
   }
 }

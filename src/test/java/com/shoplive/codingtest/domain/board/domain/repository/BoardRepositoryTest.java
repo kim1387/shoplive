@@ -34,7 +34,7 @@ class BoardRepositoryTest {
   void setUp() {
 
     String givenUUID = UUID.randomUUID().toString();
-    givenUser = User.builder().userRole(UserRole.USER).isActivated(true).name("김기현").build();
+    givenUser = User.builder().userRole(UserRole.USER).name("김기현").build();
 
     givenBoard = Board.builder().title("제목").content("내용").user(givenUser).build();
 

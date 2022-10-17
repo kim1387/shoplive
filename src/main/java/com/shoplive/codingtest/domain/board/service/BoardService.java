@@ -4,6 +4,7 @@ import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.domain.board.domain.repository.BoardRepository;
 import com.shoplive.codingtest.domain.board.dto.*;
 import com.shoplive.codingtest.domain.board.exception.BoardNotFoundException;
+import com.shoplive.codingtest.domain.board.exception.CantDeleteAlreadyBoard;
 import com.shoplive.codingtest.domain.board.exception.CantUpdateOthersBoard;
 import com.shoplive.codingtest.domain.image.domain.entity.Image;
 import com.shoplive.codingtest.domain.image.service.ImageService;
@@ -14,12 +15,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -125,6 +128,10 @@ public class BoardService {
 
   public void deleteBoard(Long boardId, Long userId) {
     Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+    if (board.isRemoved()) {
+      throw new CantDeleteAlreadyBoard();
+    }
+
     if (!Objects.equals(userId, board.getUser().getId())) {
       throw new CantUpdateOthersBoard();
     }
