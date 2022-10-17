@@ -2,9 +2,7 @@ package com.shoplive.codingtest.domain.board.service;
 
 import com.shoplive.codingtest.domain.board.domain.entity.Board;
 import com.shoplive.codingtest.domain.board.domain.repository.BoardRepository;
-import com.shoplive.codingtest.domain.board.dto.BoardDetailResponse;
-import com.shoplive.codingtest.domain.board.dto.BoardUpdateRequest;
-import com.shoplive.codingtest.domain.board.dto.BoardUploadRequest;
+import com.shoplive.codingtest.domain.board.dto.*;
 import com.shoplive.codingtest.domain.board.exception.BoardNotFoundException;
 import com.shoplive.codingtest.domain.board.exception.CantUpdateOthersBoard;
 import com.shoplive.codingtest.domain.image.domain.entity.Image;
@@ -12,13 +10,16 @@ import com.shoplive.codingtest.domain.image.service.ImageService;
 import com.shoplive.codingtest.domain.user.domain.entity.User;
 import com.shoplive.codingtest.domain.user.domain.repository.UserRepository;
 import com.shoplive.codingtest.domain.user.exception.UserNotFoundException;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -44,7 +45,9 @@ public class BoardService {
     boardRepository.save(newBoard);
 
     List<String> imageCloudPathList =
-        UploadImageS3andSaveEntity(newBoard, boardUploadRequest.getBoardImages());
+        uploadImageS3andSaveEntity(newBoard, boardUploadRequest.getBoardImages()).stream()
+            .map(Image::getCloudPath)
+            .collect(Collectors.toList());
 
     return BoardDetailResponse.builder()
         .userName(loggedInUser.getName())
@@ -70,6 +73,23 @@ public class BoardService {
         .build();
   }
 
+  public BoardListResponse getBoardListPage(int page, int size, boolean isTimeReversed) {
+    final Pageable pageable = PageRequest.of(page, size);
+    List<BoardPreviewInfo> boardPreviewInfoList =
+        boardRepository.findBoardPreviewInfoListPage(pageable, isTimeReversed);
+
+    return new BoardListResponse(boardPreviewInfoList);
+  }
+
+  public BoardListResponse searchBoardWithTitleOrContent(
+      int page, int size, boolean isTimeReversed, String keyword) {
+    final Pageable pageable = PageRequest.of(page, size);
+    List<BoardPreviewInfo> boardPreviewInfoList =
+        boardRepository.getBoardListSearchTitleOrContent(pageable, isTimeReversed, keyword);
+
+    return new BoardListResponse(boardPreviewInfoList);
+  }
+
   @Transactional
   public BoardDetailResponse updateBoard(BoardUpdateRequest boardUpdateRequest) {
     Long boardId = boardUpdateRequest.getBoardId();
@@ -78,25 +98,28 @@ public class BoardService {
         boardRepository.findByIdAndRemoved(boardId).orElseThrow(BoardNotFoundException::new);
     checkIsWriter(boardUpdateRequest, board);
 
+    List<String> imageCloudPathList = deleteLegacyImageListEntityandreuploadImage(boardUpdateRequest, boardId, board);
+
+    return BoardDetailResponse.builder()
+        .userName(loggedInUser.getName())
+        .title(board.getTitle())
+        .content(board.getContent())
+        .boardImages(
+            board.getBoardImages().stream().map(Image::getCloudPath).collect(Collectors.toList()))
+        .createdDate(board.getCreatedDate())
+        .updatedDate(board.getUpdatedDate())
+        .boardImages(imageCloudPathList)
+        .build();
+  }
+
+  private List<String> deleteLegacyImageListEntityandreuploadImage(BoardUpdateRequest boardUpdateRequest, Long boardId, Board board) {
     List<Image> imageList = imageService.findImageByBoardId(boardId);
-    BoardDetailResponse response =
-        BoardDetailResponse.builder()
-            .userName(loggedInUser.getName())
-            .title(board.getTitle())
-            .content(board.getContent())
-            .boardImages(
-                board.getBoardImages().stream()
-                    .map(Image::getCloudPath)
-                    .collect(Collectors.toList()))
-            .createdDate(board.getCreatedDate())
-            .updatedDate(board.getUpdatedDate())
-            .build();
-    if (!imageList.equals(boardUpdateRequest.getBoardImages())) {
-      List<String> imageCloudPathList =
-          UploadImageS3andSaveEntity(board, boardUpdateRequest.getBoardImages());
-      response.setBoardImages(imageCloudPathList);
-    }
-    return response;
+    imageList.forEach(image -> imageService.deleteS3Image(image.getName()));
+    imageService.deleteAllImage(imageList);
+
+    List<Image> updatedImages =
+        uploadImageS3andSaveEntity(board, boardUpdateRequest.getBoardImages());
+    return updatedImages.stream().map(Image::getCloudPath).collect(Collectors.toList());
   }
 
   public void deleteBoard(Long boardId, Long userId) {
@@ -111,15 +134,11 @@ public class BoardService {
     imageService.deleteAllImage(imageList);
   }
 
-  private List<String> UploadImageS3andSaveEntity(Board board, List<MultipartFile> boardImages) {
+  private List<Image> uploadImageS3andSaveEntity(Board board, List<MultipartFile> boardImages) {
     final List<Image> updatedImageList =
-        boardImages.stream()
-            .map(imageService::uploadToS3)
-            .peek(image -> image.setBoard(board))
-            .collect(Collectors.toList());
-    return imageService.saveAllImage(updatedImageList).stream()
-        .map(Image::getCloudPath)
-        .collect(Collectors.toList());
+        boardImages.stream().map(imageService::uploadToS3).collect(Collectors.toList());
+    updatedImageList.forEach(image -> image.setBoard(board));
+    return imageService.saveAllImage(updatedImageList);
   }
 
   private void checkIsWriter(BoardUpdateRequest boardUpdateRequest, Board board) {
