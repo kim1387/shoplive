@@ -89,6 +89,14 @@ public class ImageService {
     return Optional.empty();
   }
 
+  public void deleteS3Image(String fileName) {
+    amazonS3Client.deleteObject(bucket, fileName);
+  }
+
+  public void deleteAllImage(List<Image> imageList) {
+    imageRepository.deleteAllInBatch(imageList);
+  }
+
   public void cleanUpLocalFile(File file) {
 
     try {

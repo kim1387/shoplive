@@ -99,6 +99,18 @@ public class BoardService {
     return response;
   }
 
+  public void deleteBoard(Long boardId, Long userId) {
+    Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+    if (!Objects.equals(userId, board.getUser().getId())) {
+      throw new CantUpdateOthersBoard();
+    }
+    board.deleteBoard();
+    boardRepository.save(board);
+    List<Image> imageList = imageService.findImageByBoardId(boardId);
+    imageList.forEach(image -> imageService.deleteS3Image(image.getName()));
+    imageService.deleteAllImage(imageList);
+  }
+
   private List<String> UploadImageS3andSaveEntity(Board board, List<MultipartFile> boardImages) {
     final List<Image> updatedImageList =
         boardImages.stream()

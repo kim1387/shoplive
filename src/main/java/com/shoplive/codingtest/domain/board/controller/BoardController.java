@@ -39,4 +39,12 @@ public class BoardController {
 
     return ResponseEntity.ok(ResultResponse.of(ResultCode.BOARD_DETAIL_UPDATE_SUCCESS, response));
   }
+
+  @DeleteMapping("/{boardId}")
+  public ResponseEntity<ResultResponse> deleteBoard(
+      @PathVariable Long boardId, @RequestParam Long userId) {
+    boardService.deleteBoard(boardId, userId);
+
+    return ResponseEntity.ok(ResultResponse.of(ResultCode.BOARD_DELETE_SUCCESS, new Object()));
+  }
 }
